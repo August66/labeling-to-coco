@@ -18,22 +18,32 @@ for i, cls in enumerate(classes, 1):
     dataset['categories'].append({'id': i, 'name': cls, 'supercategory': 'mark'})
 
 # 读取images文件夹的图片名称
-indexes = [f for f in os.listdir(os.path.join(root_path, 'images'))]
+indexes = [f for f in os.listdir(os.path.join(root_path, 'images/train'))]
 
 # 判断是建立训练集还是验证集
 if phase == 'train':
-    indexes = [line for i, line in enumerate(indexes) if i <= split]
+    indexes = [line for i, line in enumerate(indexes)]
 elif phase == 'val':
-    indexes = [line for i, line in enumerate(indexes) if i > split]
+    indexes = [line for i, line in enumerate(indexes)]
 
 # 读取Bbox信息
 with open(os.path.join(root_path, 'annos.txt')) as tr:
     annos = tr.readlines()
+max_d=0
+min_d=100000
 i=0
 for k, index in enumerate(indexes):
     # 用opencv读取图片，得到图像的宽和高
-    im = cv2.imread(os.path.join(root_path, 'images/') + index)
+    im = cv2.imread(os.path.join(root_path, 'images/train/') + index)
     height, width, _ = im.shape
+    if min_d>height :
+        min_d=height
+    if min_d > width:
+        min_d = width
+    if max_d < width:
+        max_d = width
+    if max_d < height:
+        max_d = height
     print(index)
     # 添加图像的信息到dataset中
     dataset['images'].append({'file_name': index,
@@ -70,10 +80,11 @@ for k, index in enumerate(indexes):
             })
             i=i+1
 
+print(min_d)
+print(max_d)
 
 
-
-# 保存结果的文件夹
+#保存结果的文件夹
 folder = os.path.join(root_path, 'annotations')
 if not os.path.exists(folder):
   os.makedirs(folder)

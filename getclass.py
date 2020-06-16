@@ -93,5 +93,5 @@ for i in range(len(l)):
     name, x, y, x1, y1 = getkey(t[i])
     #print(name)
     for j in range(len(name)):
-        str_cl_id=names.index(name[j])
-        #printdata(str_image,str_cl_id,x[j],y[j],x1[j],y1[j])
+        str_cl_id=names.index(name[j])+1
+        printdata(str_image,str_cl_id,x[j],y[j],x1[j],y1[j])
